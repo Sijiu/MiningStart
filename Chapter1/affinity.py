@@ -47,10 +47,16 @@ def print_rule(premise, conclusion, support, confidence, features):
     print "- Confidence : {0:.3f}".format(confidence[(premise, conclusion)])
 
 # print_rule(1, 3, support, confidence, features)
-sorted_support = sorted(support.items(), key=itemgetter(1), reverse=True)
+
+# sorted_support = sorted(support.items(), key=itemgetter(1), reverse=True)
+# for index in range(5):
+#     print "Rule #{0}".format(index + 1)
+#     premise, conclusion = sorted_support[index][0]
+#     print_rule(premise, conclusion, support, confidence, features)
+sorted_confidence = sorted(confidence.items(), key=itemgetter(1), reverse=True)
 for index in range(5):
     print "Rule #{0}".format(index + 1)
-    premise, conclusion = sorted_support[index][0]
+    premise, conclusion = sorted_confidence[index][0]
     print_rule(premise, conclusion, support, confidence, features)
 
 
