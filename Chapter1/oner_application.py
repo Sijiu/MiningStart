@@ -22,9 +22,9 @@ def train_feature_value(X, y_true, feature_index, value):
     most_frequent_class = sorted_class_counts[0][0]
     incorrect_predictions = [class_counts for class_value, class_count in class_counts.items() if class_value !=
                              most_frequent_class]
-    # error = sum(incorrect_predictions)
-    print "incorrect_predictions==", incorrect_predictions
-    error = len(incorrect_predictions)
+    # errors = sum(incorrect_predictions)
+    error = len(incorrect_predictions)   # sum(incorrect_predictions)
+    # print "incorrect_predictions==", incorrect_predictions
     return most_frequent_class, error
 
 
@@ -37,7 +37,7 @@ def train_on_feature(X, y_true, feature_index):
         predictors[current_value] = most_frequent_class
         errors.append(error)
     total_error = sum(errors)
-    print "error...", predictors, errors, "---", total_error
+    # print "error...", predictors, errors, "---", total_error
     return predictors, total_error
 Xd_train, Xd_test, y_train, y_test = train_test_split(X_d, y, random_state=14)
 all_predictors = {}
@@ -46,16 +46,24 @@ for feature_index in range(Xd_train.shape[1]):
     predictors, total_error = train_on_feature(Xd_train, y_train, feature_index)
     all_predictors[feature_index] = predictors
     errors[feature_index] = total_error
-best_feature, best_error = sorted(errors.items(), key=itemgetter(1), reverse=True)[0]
-model = {'feature': best_feature, 'predictor': all_predictors[best_feature][0]}
+best_feature, best_error = sorted(errors.items(), key=itemgetter(1))[0]  # 不用, reverse=True
+model = {'feature': best_feature, 'predictor': all_predictors[best_feature]}
 # variable = model['variable']
 # predictor = model['predictor']
 # prediction = predictor[int(sample[variable])]
-
+print "model==", model
+# model== {'feature': 2, 'predictor': {0: 0, 1: 2}}
 
 def predict(X_test, model):
-    variable = model['variable']
+    variable = model['feature']
     predictor = model['predictor']
+    # print "variable==", variable
+    # print "predictor==", predictor
     y_predicted = np.array([predictor[int(sample[variable])] for sample in X_test])
     return y_predicted
 y_predicted = predict(Xd_test, model)
+# print "y_predicted==", y_predicted
+
+accuracy = np.mean(y_predicted == y_test) * 100
+print "The test accuracy is {:.1f}%".format(accuracy)
+# The test accuracy is 65.8%
